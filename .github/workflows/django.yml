@@ -1,0 +1,49 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ main, dev-abnos ]
+  pull_request:
+    branches: [ mian, dev-abnos ]
+defaults:
+  run:
+    working-directory: src/etcpc/
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+
+    services:
+      postgres:
+        image: postgres:12.0
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github_actions
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/github_actions
+      SECRET_KEY: django-insecure-$&d=zypm3&39-ns)z_gs3y@d9g7920^$swx6_gqd%%up32b2tz
+      DEBUG: True
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: psycopg2 prerequisites
+      run: sudo apt-get install libpq-dev
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: |
+        python manage.py test
