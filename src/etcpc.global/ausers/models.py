@@ -108,3 +108,15 @@ class ETCPCUser(User):
 
     class Meta:
         abstract = True
+
+
+class Director(ETCPCUser):
+    """
+    Proxy model that represent ETCPC director, this user is found in
+    the top of users hierarchy of ETCPC strucure.
+
+    Attributes: Does not caontain any additional attributes
+    """
+
+    class Meta:
+        permissions = (("list_director", "Can list directors"),)
