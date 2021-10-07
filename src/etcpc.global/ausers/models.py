@@ -119,4 +119,16 @@ class Director(ETCPCUser):
     """
 
     class Meta:
-        permissions = (("list_director", "Can list directors"),)
+        permissions = (("list_directors", "Can list directors"),)
+
+
+class Manager(ETCPCUser):
+    """
+    Representation of ETCPC manager. This user is under always under revision
+    of :model:`ausers.Director`, also he/she is second in ETCPC user hierarchy.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        permissions = (("list_managers", "Can list managers"),)
