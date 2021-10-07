@@ -8,3 +8,8 @@
 """
 
 from django.contrib import admin
+from django.contrib.auth.models import Group
+
+# Group will be manged dynamicaly not need
+# add in admin panel
+admin.site.unregister(Group)
