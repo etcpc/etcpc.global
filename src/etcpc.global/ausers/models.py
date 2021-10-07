@@ -171,10 +171,33 @@ class Institution(Address):
 class GeneralScientificCommittee(ETCPCUser):
     """
     ETCPCUser subclass that defines ETCPC's  Scientifi committee. The model
-    represent both general scientific committees.
+    represent general scientific committees.
 
     Attributes: Does not contain any additional attributes.
     """
 
     class Meta:
-        permissions = (("list_scientific_committees", "Can list scientific committee"),)
+        permissions = (
+            (
+                "list_general_scientific_committees",
+                "Can list general scientific committee",
+            ),
+        )
+
+
+class LocalScientificCommittee(ETCPCUser):
+    """
+    Local ETCPC's  Scientifi committee, which is accountable for each institutions.
+
+    Attributes:
+        (institution)
+    """
+
+    institution = models.ForeignKey(
+        Institution, verbose_name=_("institution"), on_delete=models.CASCADE
+    )
+
+    class Meta:
+        permissions = (
+            ("list_local_scientific_committees", "Can list local scientific committee"),
+        )
