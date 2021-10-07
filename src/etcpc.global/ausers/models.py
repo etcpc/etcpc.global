@@ -100,11 +100,17 @@ class ETCPCUser(User):
     need to be managed in different models.
 
     Attributes:
-            (first_name, last_name)
+            (first_name, last_name, sex, date_of_birth)
     """
+
+    class SexChoice(models.TextChoices):
+        MALE = "M", _("Male")
+        FEMALE = "F", _("Female")
 
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
+    sex = models.CharField(_("sex"), max_length=1, choices=SexChoice.choices)
+    date_of_birth = models.DateField(_("birth date"))
 
     class Meta:
         abstract = True
