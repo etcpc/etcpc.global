@@ -163,3 +163,6 @@ class Institution(Address):
     name = models.CharField(_("name"), max_length=150)
     short_name = models.CharField(_("short name"), max_length=7, blank=True, null=True)
     logo = models.ImageField(_("logo"), upload_to="institutions/logo/")
+
+    class  Meta:
+        permissions = (('list_institutions', 'Can list institutions'))
