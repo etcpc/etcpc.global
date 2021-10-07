@@ -10,8 +10,10 @@
 """
 
 from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
 
 class AusersConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "ausers"
+    verbose_name = _("authentication and authorization")
