@@ -61,7 +61,7 @@ ROOT_URLCONF = "etcpc.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -95,12 +95,12 @@ JET_DEFAULT_THEME = "light-violet"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
 DATABASES = {
     "default": config(
-        "DATABASE_URL", default="sqlite:///" / BASE_DIR / "db.sqlite3", cast=db_url
+        "DATABASE_URL", default="sqlite:///" + str(BASE_DIR) + "db.sqlite3", cast=db_url
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -158,3 +158,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # The model to use to represent a User
 AUTH_USER_MODEL = "ausers.User"
+
