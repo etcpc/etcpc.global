@@ -18,7 +18,7 @@ class PhoneNumberValidator(RegexValidator):
         code: code name used to identify error when raises.
     """
 
-    regex = (r"(\+2519|09)\d{8}$",)
+    regex = r"(\+2519|09)\d{8}$"
     message = _(
         "Please enter your phone number in +2519********" " or 09******** format."
     )
