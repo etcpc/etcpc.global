@@ -164,5 +164,17 @@ class Institution(Address):
     short_name = models.CharField(_("short name"), max_length=7, blank=True, null=True)
     logo = models.ImageField(_("logo"), upload_to="institutions/logo/")
 
-    class  Meta:
-        permissions = (('list_institutions', 'Can list institutions'))
+    class Meta:
+        permissions = (("list_institutions", "Can list institutions"),)
+
+
+class GeneralScientificCommittee(ETCPCUser):
+    """
+    ETCPCUser subclass that defines ETCPC's  Scientifi committee. The model
+    represent both general scientific committees.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        permissions = (("list_scientific_committees", "Can list scientific committee"),)
