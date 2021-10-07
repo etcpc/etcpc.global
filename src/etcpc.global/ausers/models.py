@@ -147,3 +147,19 @@ class Manager(ETCPCUser):
 
     class Meta:
         permissions = (("list_managers", "Can list managers"),)
+
+
+class Institution(Address):
+    """
+    A basic representation of any institution that works with ETCPC.
+
+    Attributes:
+            name: Legal name of an institution
+            short_name: short name institution, specially for universities
+                        ex. Adama Science and Technology University >> ASTU
+            logo: Legal institution logo.
+    """
+
+    name = models.CharField(_("name"), max_length=150)
+    short_name = models.CharField(_("short name"), max_length=7, blank=True, null=True)
+    logo = models.ImageField(_("logo"), upload_to="institutions/logo/")
