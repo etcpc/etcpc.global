@@ -112,10 +112,10 @@ class ETCPCUser(User):
 
 class Director(ETCPCUser):
     """
-    Proxy model that represent ETCPC director, this user is found in
-    the top of users hierarchy of ETCPC strucure.
+    Subclass of ETCPCUser that represent ETCPC organization director.
+    This user is found in the top of ETCPC users hierarchy.
 
-    Attributes: Does not caontain any additional attributes
+    Attributes: Does not contain any additional attributes.
     """
 
     class Meta:
