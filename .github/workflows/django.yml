@@ -7,7 +7,7 @@ on:
     branches: [ mian, dev-abnos ]
 defaults:
   run:
-    working-directory: src/etcpc/
+    working-directory: src/etcpc.global/
 jobs:
   build:
 
