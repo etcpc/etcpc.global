@@ -30,7 +30,7 @@ class Address(models.Model):
     phone_number = models.CharField(
         _("phone number"),
         max_length=13,
-        validators=(PhoneNumberValidator,),
+        validators=(PhoneNumberValidator(),),
         help_text=_(
             "Formated phone number used as an alternative address for subclasses."
         ),
