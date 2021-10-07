@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ main, dev-abnos ]
+    branches: [ main, dev-abnos, dev-iris, dev-esrael-django, dev-ruth ]
   pull_request:
-    branches: [ mian, dev-abnos ]
+    branches: [ main, dev-abnos, dev-iris, dev-esrael-django, dev-ruth ]
 defaults:
   run:
     working-directory: src/etcpc.global/
