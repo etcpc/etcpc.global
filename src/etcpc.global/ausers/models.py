@@ -88,3 +88,23 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
+
+
+class ETCPCUser(User):
+    """
+    An abstract class, that is subclass of :model:`ausers.User`. It containt
+    additional attributes, and serve as base class for all users except system
+    administrator.
+
+    Since system administrator has exceptional permissions, all other users
+    need to be managed in different models.
+
+    Attributes:
+            (first_name, last_name)
+    """
+
+    first_name = models.CharField(_("first name"), max_length=150)
+    last_name = models.CharField(_("last name"), max_length=150)
+
+    class Meta:
+        abstract = True
