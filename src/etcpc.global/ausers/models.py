@@ -100,13 +100,22 @@ class ETCPCUser(User):
     need to be managed in different models.
 
     Attributes:
-            (first_name, last_name, sex, date_of_birth)
+            (title, first_name, last_name, sex, date_of_birth)
     """
 
     class SexChoice(models.TextChoices):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
+    class TitleChoice(models.IntegerChoices):
+        MR = 0, _("mr")
+        MRS = 1, _("mrs")
+        MS = 2, _("ms")
+        MISS = 3, _("miss")
+        DR = 4, _("doctor")
+        PROFESSOR = 5, _("professor")
+
+    title = models.IntegerField(choices=TitleChoice.choices)
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
     sex = models.CharField(_("sex"), max_length=1, choices=SexChoice.choices)
