@@ -18,7 +18,10 @@
         <![endif]-->
         
         {{post.title}}<br>
-        {{post.image}}<br>
+     {% for img in post.image.iterator%}
+     <h5> hey </h5>
+          <img src="{{ img.image.url}}" width="400">
+     {%endfor%}
         {{post.content}}<br>
         {{post.author}}
         {{post.publish_date}}

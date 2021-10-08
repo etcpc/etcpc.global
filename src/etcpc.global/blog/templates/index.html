@@ -16,11 +16,17 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        
-        {% for post in posts %}
+         {% for post in posts %}
 
             <h1><a href="{{post.get_absolute_url}}"> {{ post.title }} </a></h1> <br>
-            {{ post.excerpt }} <br>
+            <br>
+
+                  <div style="width:100px;margin-top:15px; background-color:grey;"> 
+                  
+                  <img src="{{ post.banner.url }}" width="200">
+                  
+                  </div>
+
 
         {% endfor %}
 

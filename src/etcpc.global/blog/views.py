@@ -3,7 +3,7 @@ from .models import Post
 
 
 def home(request):
-    all_posts = Post.published.filter(status="published")
+    all_posts = Post.objects.filter(status="published")
     return render(request, "index.html", {"posts": all_posts})
 
 
