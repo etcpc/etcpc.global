@@ -246,19 +246,19 @@ class InstitutionScientificCommittee(models.Model):
         db_table = "institution_scientific_committee"
 
 
-class MediaTeamMemeber(ETCPCUser):
+class MediaTeamManager(ETCPCUser):
     """
-    User that represent media team memeber, directly accountatble for
+    A model that represent media team memeber, directly accountatble for
     ETCPC manager.
 
     Attributes: Does not contain any additional attributes.
     """
 
     class Meta:
-        permissions = (("can_list_media_team_members", "Can list media team members"),)
+        permissions = (("can_list_media_team_managers", "Can list media team manager"),)
         proxy = True
-        verbose_name = _("media team member")
-        verbose_name_plural = _("media team members")
+        verbose_name = _("media team manager")
+        verbose_name_plural = _("media team managers")
 
 
 class LocalMediaTeamMemeber(ETCPCUser):
@@ -270,10 +270,10 @@ class LocalMediaTeamMemeber(ETCPCUser):
     """
 
     class Meta:
-        proxy = True
         permissions = (
             ("can_list_local_media_team_members", "Can list local media team members"),
         )
+        proxy = True
         verbose_name = _("local media team member")
         verbose_name_plural = _("local media team members")
 
