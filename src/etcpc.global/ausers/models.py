@@ -209,17 +209,66 @@ class LocalScientificCommittee(ETCPCUser):
 class InstitutionScientificCommittee(models.Model):
     """
     A model that represent institution of each local scientific committees.
+
+    Attributes:
+        (user, institution)
     """
 
     user = models.OneToOneField(
         LocalScientificCommittee,
         verbose_name=_("users"),
-        related_name="scientific_committees",
+        related_name="scientific_committee",
         on_delete=models.CASCADE,
     )
-    institution = models.OneToOneField(
+    institution = models.ForeignKey(
         Institution,
         verbose_name=_("institution"),
         related_name="scientific_committees",
+        on_delete=models.CASCADE,
+    )
+
+
+class MediaTeamMemeber(ETCPCUser):
+    """
+    User that represent media team memeber, directly accountatble for
+    ETCPC manager.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        proxy = True
+
+
+class LocalMediaTeamMemeber(ETCPCUser):
+    """
+    Institution level media team member, represent institution
+    activities.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        proxy = True
+
+
+class InstitutionMediaTeamMember(models.Model):
+    """
+    A model that relate institution and their local media team members.
+
+    Attributes:
+        (user, institution)
+    """
+
+    user = models.OneToOneField(
+        LocalMediaTeamMemeber,
+        verbose_name=_("users"),
+        related_name="media_team",
+        on_delete=models.CASCADE,
+    )
+    institution = models.ForeignKey(
+        Institution,
+        verbose_name=_("institution"),
+        related_name="media_teams",
         on_delete=models.CASCADE,
     )
