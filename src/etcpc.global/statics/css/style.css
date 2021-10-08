@@ -1595,7 +1595,7 @@
 }
 /*=======[ Index Testimonial ]========*/
  .testimonial {
-     background: linear-gradient(65deg, #5958a0 0%, #111b51 100%);
+     background: linear-gradient(65deg, #5958a0 0%, #28609D 100%);
      position: relative;
      padding: 0;
      z-index: 1;
@@ -1770,7 +1770,7 @@
 }
  .blog .single_item:hover .blog_title {
      margin-top: -32px;
-     background: #111b51;
+     background: #28609D;
 }
  .blog .single_item:hover .blog_title span {
      color: #ffffff;
@@ -1883,7 +1883,7 @@
      padding: 0 40px;
 }
  footer {
-     background: #111b51;
+     background: #28609D;
      position: relative;
      z-index: 1;
      padding: 0 0 150px 0;
@@ -1900,7 +1900,7 @@
      z-index: -1;
 }
  footer:after {
-     background: #111b51;
+     background: #28609D;
      position: absolute;
      content: "";
      top: 0;
@@ -1921,7 +1921,7 @@
 }
  footer .shape_wrapper:before {
      border-radius: 0 0 0 50%;
-     background: #111b51;
+     background: #28609D;
      position: absolute;
      content: "";
      top: 0;
@@ -2665,7 +2665,7 @@
 }
  .testimonial_2 {
      padding: 130px 0 0px 0;
-     background: linear-gradient(65deg, #5958a0 0%, #111b51 100%);
+     background: linear-gradient(65deg, #5958a0 0%, #28609D 100%);
      position: relative;
      z-index: 1;
      overflow: hidden;
@@ -3722,7 +3722,7 @@
 /*=======[ Our Team Membar ]========*/
  .meet_our_team {
      padding: 150px 0 100px 0;
-     background: linear-gradient(65deg, #5958a0 0%, #111b51 100%);
+     background: linear-gradient(65deg, #5958a0 0%, #28609D 100%);
      position: relative;
      z-index: 1;
      overflow: hidden;
@@ -4834,7 +4834,7 @@
      margin-bottom: 0;
 }
  .blog_wrapper .blog_wrapper_right .blog-right-items .become_a_teacher .form-full-box {
-     background: linear-gradient(65deg, #5958a0 0%, #111b51 100%);
+     background: linear-gradient(65deg, #5958a0 0%, #28609D 100%);
      padding: 40px 30px;
      text-align: center;
      -webkit-box-shadow: 0px 0px 81px 0px rgba(47, 47, 47, 0.1);
@@ -6505,7 +6505,7 @@
      margin: 19px 0 0;
 }
  #courses_details_wrapper .blog-right-items .courses_features, .event_details_wrapper .blog-right-items .courses_features {
-     background: linear-gradient(65deg, #5958a0 0%, #111b51 100%);
+     background: linear-gradient(65deg, #5958a0 0%, #28609D 100%);
      padding: 50px 0px;
      position: relative;
      z-index: 1;
@@ -6672,7 +6672,7 @@
 }
  #related_courses_wrapper .owl-buttons .owl-prev, #related_courses_wrapper .owl-buttons .owl-next {
      height: 40px;
-     border: 1px solid #111b51;
+     border: 1px solid #28609D;
      width: 40px;
      line-height: 40px;
      text-align: center;
@@ -6681,7 +6681,7 @@
      padding: 0 !important;
 }
  #related_courses_wrapper .owl-buttons .owl-prev i:before, #related_courses_wrapper .owl-buttons .owl-next i:before {
-     color: #111b51;
+     color: #28609D;
      font-size: 12px;
      -webkit-transition: all 0.3s ease-in-out;
      transition: all 0.3s ease-in-out;
