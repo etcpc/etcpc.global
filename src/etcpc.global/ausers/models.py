@@ -325,6 +325,7 @@ class ContestantProfile(models.Model):
     A model that recored :model:`ausers.Contestant` profile detailts.
 
     Attributes:
+        (contestant, institution, graduation_date)
     """
 
     contestant = models.OneToOneField(
@@ -339,4 +340,27 @@ class ContestantProfile(models.Model):
         related_name="contestants",
         on_delete=models.CASCADE,
     )
-    graduation_date = models.DateTimeField(_("expected graduation date"), blank=True, null=True)
+    graduation_date = models.DateTimeField(
+        _("expected graduation date"), blank=True, null=True
+    )
+
+
+class Team(models.Model):
+    """
+    Contestants and coach group which will participate in a contest as a team.
+
+    Attributes:
+        (name, contestant, coach)
+    """
+
+    name = models.CharField(_("name"), max_length=150)
+    contestant = models.ManyToManyField(
+        Contestant, verbose_name=_("contestants"), related_name="team_list"
+    )
+    coach = models.ForeignKey(
+        Coach,
+        verbose_name=_("coach"),
+        related_name=("teams"),
+        on_delete=models.SET_NULL,
+        null=True,
+    )
