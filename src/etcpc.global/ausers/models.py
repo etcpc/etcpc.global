@@ -272,3 +272,35 @@ class InstitutionMediaTeamMember(models.Model):
         related_name="media_teams",
         on_delete=models.CASCADE,
     )
+
+
+class Coach(ETCPCUser):
+    """
+    Represent ETCPC coach
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = _("coach")
+        verbose_name_plural = _("coaches")
+
+
+class InstitutionCoach(models.Model):
+    """
+    A model that relate institution and their coaches.
+    """
+
+    coach = models.OneToOneField(
+        Coach,
+        verbose_name=_("coach"),
+        related_name="institution",
+        on_delete=models.CASCADE,
+    )
+    institution = models.ForeignKey(
+        Institution,
+        verbose_name=_("institution"),
+        related_name="coaches",
+        on_delete=models.CASCADE,
+    )
