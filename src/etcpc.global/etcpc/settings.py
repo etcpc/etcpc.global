@@ -62,7 +62,7 @@ ROOT_URLCONF = "etcpc.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -159,4 +159,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # The model to use to represent a User
 AUTH_USER_MODEL = "ausers.User"
-
