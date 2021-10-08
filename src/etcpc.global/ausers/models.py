@@ -51,6 +51,18 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
 
     """
 
+    class SexChoice(models.TextChoices):
+        MALE = "M", _("Male")
+        FEMALE = "F", _("Female")
+
+    class TitleChoice(models.IntegerChoices):
+        MR = 0, _("mr")
+        MRS = 1, _("mrs")
+        MS = 2, _("ms")
+        MISS = 3, _("miss")
+        DR = 4, _("doctor")
+        PROFESSOR = 5, _("professor")
+
     username_validator = UnicodeUsernameValidator()
     username = models.CharField(
         _("username"),
@@ -79,6 +91,12 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
     )
     date_joined = models.DateTimeField(_("date joined"), auto_now_add=True)
 
+    title = models.IntegerField(choices=TitleChoice.choices)
+    first_name = models.CharField(_("first name"), max_length=150)
+    last_name = models.CharField(_("last name"), max_length=150)
+    sex = models.CharField(_("sex"), max_length=1, choices=SexChoice.choices)
+    date_of_birth = models.DateField(_("birth date"))
+
     objects = UserManager()
 
     EMAIL_FIELD = "email"
@@ -86,8 +104,10 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
     REQUIRED_FIELDS = ["email"]
 
     class Meta:
+        db_table = "user"
         verbose_name = _("user")
         verbose_name_plural = _("users")
+        permissions = (("list_users", "Can list users"),)
 
 
 class ETCPCUser(User):
@@ -103,38 +123,10 @@ class ETCPCUser(User):
             (title, first_name, last_name, sex, date_of_birth)
     """
 
-    class SexChoice(models.TextChoices):
-        MALE = "M", _("Male")
-        FEMALE = "F", _("Female")
-
-    class TitleChoice(models.IntegerChoices):
-        MR = 0, _("mr")
-        MRS = 1, _("mrs")
-        MS = 2, _("ms")
-        MISS = 3, _("miss")
-        DR = 4, _("doctor")
-        PROFESSOR = 5, _("professor")
-
-    title = models.IntegerField(choices=TitleChoice.choices)
-    first_name = models.CharField(_("first name"), max_length=150)
-    last_name = models.CharField(_("last name"), max_length=150)
-    sex = models.CharField(_("sex"), max_length=1, choices=SexChoice.choices)
-    date_of_birth = models.DateField(_("birth date"))
-
     class Meta:
-        abstract = True
-
-
-class Director(ETCPCUser):
-    """
-    Subclass of ETCPCUser that represent ETCPC organization director.
-    This user is found in the top of ETCPC users hierarchy.
-
-    Attributes: Does not contain any additional attributes.
-    """
-
-    class Meta:
-        permissions = (("list_directors", "Can list directors"),)
+        proxy = True
+        verbose_name = _("etcpc user")
+        verbose_name_plural = _("etcpc users")
 
 
 class Manager(ETCPCUser):
@@ -147,6 +139,24 @@ class Manager(ETCPCUser):
 
     class Meta:
         permissions = (("list_managers", "Can list managers"),)
+        proxy = True
+        verbose_name = _("manager")
+        verbose_name_plural = _("managers")
+
+
+class Director(Manager):
+    """
+    Subclass of ETCPCUser that represent ETCPC organization director.
+    This user is found in the top of ETCPC users hierarchy.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        permissions = (("list_directors", "Can list directors"),)
+        proxy = True
+        verbose_name = _("director")
+        verbose_name_plural = _("directors")
 
 
 class Institution(Address):
@@ -165,13 +175,16 @@ class Institution(Address):
     logo = models.ImageField(_("logo"), upload_to="institutions/logo/")
 
     class Meta:
+        db_table = "institution"
         permissions = (("list_institutions", "Can list institutions"),)
+        verbose_name = _("institution")
+        verbose_name_plural = _("institutions")
 
 
-class GeneralScientificCommittee(ETCPCUser):
+class ScientificCommittee(ETCPCUser):
     """
-    ETCPCUser subclass that defines ETCPC's  Scientifi committee. The model
-    represent general scientific committees.
+    Model representation of represent top level scientific committees,
+    which is direcly accountable for ETCPC manager.
 
     Attributes: Does not contain any additional attributes.
     """
@@ -179,25 +192,220 @@ class GeneralScientificCommittee(ETCPCUser):
     class Meta:
         permissions = (
             (
-                "list_general_scientific_committees",
-                "Can list general scientific committee",
+                "list_scientific_committees",
+                "Can list scientific committees",
             ),
         )
+        proxy = True
+        verbose_name = _("scientific committee")
+        verbose_name_plural = _("scientific committees")
 
 
 class LocalScientificCommittee(ETCPCUser):
     """
-    Local ETCPC's  Scientifi committee, which is accountable for each institutions.
+    Model implementation of local scientifi committee, that represent
+    it's institution.
 
-    Attributes:
-        (institution)
+    Attributes: Does not contain any additional attributes.
     """
-
-    institution = models.ForeignKey(
-        Institution, verbose_name=_("institution"), on_delete=models.CASCADE
-    )
 
     class Meta:
         permissions = (
-            ("list_local_scientific_committees", "Can list local scientific committee"),
+            (
+                "list_local_scientific_committees",
+                "Can list lcoal scientific committees",
+            ),
         )
+        proxy = True
+        verbose_name = _("local scientific committee")
+        verbose_name_plural = _("local scientific committees")
+
+
+class InstitutionScientificCommittee(models.Model):
+    """
+    A model that represent institution of each local scientific committees.
+
+    Attributes:
+        (user, institution)
+    """
+
+    user = models.OneToOneField(
+        LocalScientificCommittee,
+        verbose_name=_("member"),
+        related_name="scientific_committee",
+        on_delete=models.CASCADE,
+    )
+    institution = models.ForeignKey(
+        Institution,
+        verbose_name=_("institution"),
+        related_name="scientific_committees",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        db_table = "institution_scientific_committee"
+
+
+class MediaTeamManager(ETCPCUser):
+    """
+    A model that represent media team memeber, directly accountatble for
+    ETCPC manager.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        permissions = (("can_list_media_team_managers", "Can list media team manager"),)
+        proxy = True
+        verbose_name = _("media team manager")
+        verbose_name_plural = _("media team managers")
+
+
+class LocalMediaTeamMemeber(ETCPCUser):
+    """
+    Institution level media team member, represent institution
+    activities.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        permissions = (
+            ("can_list_local_media_team_members", "Can list local media team members"),
+        )
+        proxy = True
+        verbose_name = _("local media team member")
+        verbose_name_plural = _("local media team members")
+
+
+class InstitutionMediaTeamMember(models.Model):
+    """
+    A model that relate institution and their local media team members.
+
+    Attributes:
+        (user, institution)
+    """
+
+    user = models.OneToOneField(
+        LocalMediaTeamMemeber,
+        verbose_name=_("member"),
+        related_name="media_team",
+        on_delete=models.CASCADE,
+    )
+    institution = models.ForeignKey(
+        Institution,
+        verbose_name=_("institution"),
+        related_name="media_teams",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        db_table = "institution_media_team_member"
+
+
+class Coach(ETCPCUser):
+    """
+    Represent ETCPC coach
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        permissions = (("can_list_coaches", "Can list coaches"),)
+        proxy = True
+        verbose_name = _("coach")
+        verbose_name_plural = _("coaches")
+
+
+class InstitutionCoach(models.Model):
+    """
+    A model that relate institution and their coaches.
+
+    Attributes:
+        (coach, institution)
+    """
+
+    coach = models.OneToOneField(
+        Coach,
+        verbose_name=_("coach"),
+        related_name="institution",
+        on_delete=models.CASCADE,
+    )
+    institution = models.ForeignKey(
+        Institution,
+        verbose_name=_("institution"),
+        related_name="coaches",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        db_table = "institution_coach"
+
+
+class Contestant(ETCPCUser):
+    """
+    Top level class which represent contestants.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        permissions = (("can_list_contestants", "Can list contestants"),)
+        proxy = True
+        verbose_name = _("contestant")
+        verbose_name_plural = _("contestants")
+
+
+class ContestantProfile(models.Model):
+    """
+    A model that recored :model:`ausers.Contestant` profile detailts.
+
+    Attributes:
+        (contestant, institution, graduation_date)
+    """
+
+    contestant = models.OneToOneField(
+        Coach,
+        verbose_name=_("contestant"),
+        related_name="profile",
+        on_delete=models.CASCADE,
+    )
+    institution = models.ForeignKey(
+        Institution,
+        verbose_name=_("institution"),
+        related_name="contestants",
+        on_delete=models.CASCADE,
+    )
+    graduation_date = models.DateTimeField(
+        _("expected graduation date"), blank=True, null=True
+    )
+
+    class Meta:
+        db_table = "contestant_profile"
+
+
+class Team(models.Model):
+    """
+    Contestants and coach group which will participate in a contest as a team.
+
+    Attributes:
+        (name, contestant, coach)
+    """
+
+    name = models.CharField(_("name"), max_length=150)
+    contestant = models.ManyToManyField(
+        Contestant, verbose_name=_("contestants"), related_name="team_list"
+    )
+    coach = models.ForeignKey(
+        Coach,
+        verbose_name=_("coach"),
+        related_name=("teams"),
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
+    class Meta:
+        db_table = "team"
+        permissions = (("list_teams", "Can list teams"),)
+        verbose_name = _("team")
+        verbose_name_plural = _("teams")
