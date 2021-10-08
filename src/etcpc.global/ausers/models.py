@@ -104,8 +104,10 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
     REQUIRED_FIELDS = ["email"]
 
     class Meta:
+        db_table = "user"
         verbose_name = _("user")
         verbose_name_plural = _("users")
+        permissions = (("list_users", "Can list users"),)
 
 
 class ETCPCUser(User):
@@ -123,6 +125,8 @@ class ETCPCUser(User):
 
     class Meta:
         proxy = True
+        verbose_name = _("etcpc user")
+        verbose_name_plural = _("etcpc users")
 
 
 class Manager(ETCPCUser):
@@ -136,6 +140,8 @@ class Manager(ETCPCUser):
     class Meta:
         permissions = (("list_managers", "Can list managers"),)
         proxy = True
+        verbose_name = _("manager")
+        verbose_name_plural = _("managers")
 
 
 class Director(Manager):
@@ -149,6 +155,8 @@ class Director(Manager):
     class Meta:
         permissions = (("list_directors", "Can list directors"),)
         proxy = True
+        verbose_name = _("director")
+        verbose_name_plural = _("directors")
 
 
 class Institution(Address):
@@ -167,7 +175,10 @@ class Institution(Address):
     logo = models.ImageField(_("logo"), upload_to="institutions/logo/")
 
     class Meta:
+        db_table = "institution"
         permissions = (("list_institutions", "Can list institutions"),)
+        verbose_name = _("institution")
+        verbose_name_plural = _("institutions")
 
 
 class ScientificCommittee(ETCPCUser):
@@ -186,6 +197,8 @@ class ScientificCommittee(ETCPCUser):
             ),
         )
         proxy = True
+        verbose_name = _("scientific committee")
+        verbose_name_plural = _("scientific committees")
 
 
 class LocalScientificCommittee(ETCPCUser):
@@ -204,6 +217,8 @@ class LocalScientificCommittee(ETCPCUser):
             ),
         )
         proxy = True
+        verbose_name = _("local scientific committee")
+        verbose_name_plural = _("local scientific committees")
 
 
 class InstitutionScientificCommittee(models.Model):
@@ -227,6 +242,9 @@ class InstitutionScientificCommittee(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        db_table = "institution_scientific_committee"
+
 
 class MediaTeamMemeber(ETCPCUser):
     """
@@ -237,7 +255,10 @@ class MediaTeamMemeber(ETCPCUser):
     """
 
     class Meta:
+        permissions = (("can_list_media_team_members", "Can list media team members"),)
         proxy = True
+        verbose_name = _("media team member")
+        verbose_name_plural = _("media team members")
 
 
 class LocalMediaTeamMemeber(ETCPCUser):
@@ -250,6 +271,11 @@ class LocalMediaTeamMemeber(ETCPCUser):
 
     class Meta:
         proxy = True
+        permissions = (
+            ("can_list_local_media_team_members", "Can list local media team members"),
+        )
+        verbose_name = _("local media team member")
+        verbose_name_plural = _("local media team members")
 
 
 class InstitutionMediaTeamMember(models.Model):
@@ -273,6 +299,9 @@ class InstitutionMediaTeamMember(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        db_table = "institution_media_team_member"
+
 
 class Coach(ETCPCUser):
     """
@@ -282,6 +311,7 @@ class Coach(ETCPCUser):
     """
 
     class Meta:
+        permissions = (("can_list_coaches", "Can list coaches"),)
         proxy = True
         verbose_name = _("coach")
         verbose_name_plural = _("coaches")
@@ -308,6 +338,9 @@ class InstitutionCoach(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        db_table = "institution_coach"
+
 
 class Contestant(ETCPCUser):
     """
@@ -317,7 +350,10 @@ class Contestant(ETCPCUser):
     """
 
     class Meta:
+        permissions = (("can_list_contestants", "Can list contestants"),)
         proxy = True
+        verbose_name = _("contestant")
+        verbose_name_plural = _("contestants")
 
 
 class ContestantProfile(models.Model):
@@ -344,6 +380,9 @@ class ContestantProfile(models.Model):
         _("expected graduation date"), blank=True, null=True
     )
 
+    class Meta:
+        db_table = "contestant_profile"
+
 
 class Team(models.Model):
     """
@@ -364,3 +403,9 @@ class Team(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
+
+    class Meta:
+        db_table = "team"
+        permissions = (("list_teams", "Can list teams"),)
+        verbose_name = _("team")
+        verbose_name_plural = _("teams")
