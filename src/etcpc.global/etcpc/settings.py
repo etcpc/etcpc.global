@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local
     "ausers",
+    "pages",
 ]
 
 MIDDLEWARE = [
@@ -143,6 +144,10 @@ STATIC_ROOT = BASE_DIR / "assets"
 
 # URL to use when referring to static files located in STATIC_ROOT.
 STATIC_URL = "/assets/"
+
+STATICFILES_DIRS = (
+    BASE_DIR / 'statics',
+)
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 MEDIA_ROOT = BASE_DIR / "uploads"
