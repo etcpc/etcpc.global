@@ -216,7 +216,7 @@ class InstitutionScientificCommittee(models.Model):
 
     user = models.OneToOneField(
         LocalScientificCommittee,
-        verbose_name=_("users"),
+        verbose_name=_("member"),
         related_name="scientific_committee",
         on_delete=models.CASCADE,
     )
@@ -262,7 +262,7 @@ class InstitutionMediaTeamMember(models.Model):
 
     user = models.OneToOneField(
         LocalMediaTeamMemeber,
-        verbose_name=_("users"),
+        verbose_name=_("member"),
         related_name="media_team",
         on_delete=models.CASCADE,
     )
@@ -290,6 +290,9 @@ class Coach(ETCPCUser):
 class InstitutionCoach(models.Model):
     """
     A model that relate institution and their coaches.
+
+    Attributes:
+        (coach, institution)
     """
 
     coach = models.OneToOneField(
@@ -304,3 +307,36 @@ class InstitutionCoach(models.Model):
         related_name="coaches",
         on_delete=models.CASCADE,
     )
+
+
+class Contestant(ETCPCUser):
+    """
+    Top level class which represent contestants.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        proxy = True
+
+
+class ContestantProfile(models.Model):
+    """
+    A model that recored :model:`ausers.Contestant` profile detailts.
+
+    Attributes:
+    """
+
+    contestant = models.OneToOneField(
+        Coach,
+        verbose_name=_("contestant"),
+        related_name="profile",
+        on_delete=models.CASCADE,
+    )
+    institution = models.ForeignKey(
+        Institution,
+        verbose_name=_("institution"),
+        related_name="contestants",
+        on_delete=models.CASCADE,
+    )
+    graduation_date = models.DateTimeField(_("expected graduation date"), blank=True, null=True)
