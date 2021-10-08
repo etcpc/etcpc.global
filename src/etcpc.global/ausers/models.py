@@ -51,6 +51,18 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
 
     """
 
+    class SexChoice(models.TextChoices):
+        MALE = "M", _("Male")
+        FEMALE = "F", _("Female")
+
+    class TitleChoice(models.IntegerChoices):
+        MR = 0, _("mr")
+        MRS = 1, _("mrs")
+        MS = 2, _("ms")
+        MISS = 3, _("miss")
+        DR = 4, _("doctor")
+        PROFESSOR = 5, _("professor")
+
     username_validator = UnicodeUsernameValidator()
     username = models.CharField(
         _("username"),
@@ -79,6 +91,12 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
     )
     date_joined = models.DateTimeField(_("date joined"), auto_now_add=True)
 
+    title = models.IntegerField(choices=TitleChoice.choices)
+    first_name = models.CharField(_("first name"), max_length=150)
+    last_name = models.CharField(_("last name"), max_length=150)
+    sex = models.CharField(_("sex"), max_length=1, choices=SexChoice.choices)
+    date_of_birth = models.DateField(_("birth date"))
+
     objects = UserManager()
 
     EMAIL_FIELD = "email"
@@ -103,38 +121,8 @@ class ETCPCUser(User):
             (title, first_name, last_name, sex, date_of_birth)
     """
 
-    class SexChoice(models.TextChoices):
-        MALE = "M", _("Male")
-        FEMALE = "F", _("Female")
-
-    class TitleChoice(models.IntegerChoices):
-        MR = 0, _("mr")
-        MRS = 1, _("mrs")
-        MS = 2, _("ms")
-        MISS = 3, _("miss")
-        DR = 4, _("doctor")
-        PROFESSOR = 5, _("professor")
-
-    title = models.IntegerField(choices=TitleChoice.choices)
-    first_name = models.CharField(_("first name"), max_length=150)
-    last_name = models.CharField(_("last name"), max_length=150)
-    sex = models.CharField(_("sex"), max_length=1, choices=SexChoice.choices)
-    date_of_birth = models.DateField(_("birth date"))
-
     class Meta:
-        abstract = True
-
-
-class Director(ETCPCUser):
-    """
-    Subclass of ETCPCUser that represent ETCPC organization director.
-    This user is found in the top of ETCPC users hierarchy.
-
-    Attributes: Does not contain any additional attributes.
-    """
-
-    class Meta:
-        permissions = (("list_directors", "Can list directors"),)
+        proxy = True
 
 
 class Manager(ETCPCUser):
@@ -147,6 +135,20 @@ class Manager(ETCPCUser):
 
     class Meta:
         permissions = (("list_managers", "Can list managers"),)
+        proxy = True
+
+
+class Director(Manager):
+    """
+    Subclass of ETCPCUser that represent ETCPC organization director.
+    This user is found in the top of ETCPC users hierarchy.
+
+    Attributes: Does not contain any additional attributes.
+    """
+
+    class Meta:
+        permissions = (("list_directors", "Can list directors"),)
+        proxy = True
 
 
 class Institution(Address):
@@ -168,10 +170,10 @@ class Institution(Address):
         permissions = (("list_institutions", "Can list institutions"),)
 
 
-class GeneralScientificCommittee(ETCPCUser):
+class ScientificCommittee(ETCPCUser):
     """
-    ETCPCUser subclass that defines ETCPC's  Scientifi committee. The model
-    represent general scientific committees.
+    Model representation of represent top level scientific committees,
+    which is direcly accountable for ETCPC manager.
 
     Attributes: Does not contain any additional attributes.
     """
@@ -179,25 +181,45 @@ class GeneralScientificCommittee(ETCPCUser):
     class Meta:
         permissions = (
             (
-                "list_general_scientific_committees",
-                "Can list general scientific committee",
+                "list_scientific_committees",
+                "Can list scientific committees",
             ),
         )
+        proxy = True
 
 
 class LocalScientificCommittee(ETCPCUser):
     """
-    Local ETCPC's  Scientifi committee, which is accountable for each institutions.
+    Model implementation of local scientifi committee, that represent
+    it's institution.
 
-    Attributes:
-        (institution)
+    Attributes: Does not contain any additional attributes.
     """
-
-    institution = models.ForeignKey(
-        Institution, verbose_name=_("institution"), on_delete=models.CASCADE
-    )
 
     class Meta:
         permissions = (
-            ("list_local_scientific_committees", "Can list local scientific committee"),
+            (
+                "list_local_scientific_committees",
+                "Can list lcoal scientific committees",
+            ),
         )
+        proxy = True
+
+
+class InstitutionScientificCommittee(models.Model):
+    """
+    A model that represent institution of each local scientific committees.
+    """
+
+    user = models.OneToOneField(
+        LocalScientificCommittee,
+        verbose_name=_("users"),
+        related_name="scientific_committees",
+        on_delete=models.CASCADE,
+    )
+    institution = models.OneToOneField(
+        Institution,
+        verbose_name=_("institution"),
+        related_name="scientific_committees",
+        on_delete=models.CASCADE,
+    )
