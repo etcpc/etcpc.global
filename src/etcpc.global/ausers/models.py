@@ -48,12 +48,14 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
 
     Attributes:
         username: non-optional charcter field, used to authenticate users.
+        (is_staff, is_active, data_joined, title, first_name, last_name, sex, date_of_birth)
 
     """
 
     class SexChoice(models.TextChoices):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
+        __empty__ = _("Please select")
 
     class TitleChoice(models.IntegerChoices):
         MR = 0, _("mr")
@@ -91,17 +93,17 @@ class User(AbstractBaseUser, PermissionsMixin, Address):
     )
     date_joined = models.DateTimeField(_("date joined"), auto_now_add=True)
 
-    title = models.IntegerField(choices=TitleChoice.choices)
+    title = models.IntegerField(choices=TitleChoice.choices, blank=True, null=True)
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
-    sex = models.CharField(_("sex"), max_length=1, choices=SexChoice.choices)
-    date_of_birth = models.DateField(_("birth date"))
+    sex = models.CharField(_("sex"), max_length=1, choices=SexChoice.choices, null=True)
+    date_of_birth = models.DateField(_("birth date"), blank=True, null=True)
 
     objects = UserManager()
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS = ["email", "first_name", "last_name"]
 
     class Meta:
         db_table = "user"
@@ -119,12 +121,10 @@ class ETCPCUser(User):
     Since system administrator has exceptional permissions, all other users
     need to be managed in different models.
 
-    Attributes:
-            (title, first_name, last_name, sex, date_of_birth)
+    Attributes:Does not contain any additional attributes.
     """
 
     class Meta:
-        proxy = True
         verbose_name = _("etcpc user")
         verbose_name_plural = _("etcpc users")
 
@@ -139,7 +139,6 @@ class Manager(ETCPCUser):
 
     class Meta:
         permissions = (("list_managers", "Can list managers"),)
-        proxy = True
         verbose_name = _("manager")
         verbose_name_plural = _("managers")
 
@@ -154,7 +153,6 @@ class Director(Manager):
 
     class Meta:
         permissions = (("list_directors", "Can list directors"),)
-        proxy = True
         verbose_name = _("director")
         verbose_name_plural = _("directors")
 
@@ -181,7 +179,7 @@ class Institution(Address):
         verbose_name_plural = _("institutions")
 
 
-class ScientificCommittee(ETCPCUser):
+class ScientificCommitteeManager(ETCPCUser):
     """
     Model representation of represent top level scientific committees,
     which is direcly accountable for ETCPC manager.
@@ -192,13 +190,12 @@ class ScientificCommittee(ETCPCUser):
     class Meta:
         permissions = (
             (
-                "list_scientific_committees",
-                "Can list scientific committees",
+                "list_scientific_committee_managers",
+                "Can list scientific committee managers",
             ),
         )
-        proxy = True
-        verbose_name = _("scientific committee")
-        verbose_name_plural = _("scientific committees")
+        verbose_name = _("scientific committee manager")
+        verbose_name_plural = _("scientific committee managers")
 
 
 class LocalScientificCommittee(ETCPCUser):
@@ -216,7 +213,6 @@ class LocalScientificCommittee(ETCPCUser):
                 "Can list lcoal scientific committees",
             ),
         )
-        proxy = True
         verbose_name = _("local scientific committee")
         verbose_name_plural = _("local scientific committees")
 
@@ -256,7 +252,6 @@ class MediaTeamManager(ETCPCUser):
 
     class Meta:
         permissions = (("can_list_media_team_managers", "Can list media team manager"),)
-        proxy = True
         verbose_name = _("media team manager")
         verbose_name_plural = _("media team managers")
 
@@ -273,7 +268,6 @@ class LocalMediaTeamMemeber(ETCPCUser):
         permissions = (
             ("can_list_local_media_team_members", "Can list local media team members"),
         )
-        proxy = True
         verbose_name = _("local media team member")
         verbose_name_plural = _("local media team members")
 
@@ -312,7 +306,6 @@ class Coach(ETCPCUser):
 
     class Meta:
         permissions = (("can_list_coaches", "Can list coaches"),)
-        proxy = True
         verbose_name = _("coach")
         verbose_name_plural = _("coaches")
 
@@ -351,7 +344,6 @@ class Contestant(ETCPCUser):
 
     class Meta:
         permissions = (("can_list_contestants", "Can list contestants"),)
-        proxy = True
         verbose_name = _("contestant")
         verbose_name_plural = _("contestants")
 
