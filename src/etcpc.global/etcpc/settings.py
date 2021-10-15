@@ -36,6 +36,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "jet.dashboard",
     "jet",
+    "graphene_django",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -159,3 +160,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # The model to use to represent a User
 AUTH_USER_MODEL = "ausers.User"
+
+
+# Graphene configurations
+GRAPHENE = {"SCHEMA": "etcpc.schema.schema"}
