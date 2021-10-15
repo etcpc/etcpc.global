@@ -146,6 +146,11 @@ STATIC_ROOT = BASE_DIR / "assets"
 # URL to use when referring to static files located in STATIC_ROOT.
 STATIC_URL = "/assets/"
 
+# Additional locations of static files 
+STATICFILES_DIRS = (
+    BASE_DIR / "static",
+)
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 MEDIA_ROOT = BASE_DIR / "uploads"
 
