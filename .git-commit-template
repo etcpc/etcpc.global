@@ -26,6 +26,7 @@
 #    WIP      (Work In Progress; for intermediate commits to keep patches reasonably sized)
 #    req      (Change or add requirements)
 #    defaults (Changes default options)
+#    config   (Add or update configuration into project)
 #
 # Note: Multiple tags can be combined, e.g. [fix][jsr292] Fix issue X with methodhandles
 # --------------------
